@@ -37,8 +37,9 @@ async function init(){
     console.log("Size of List -> ", await client.llen("value"))
     console.log("all value of List -> ", await client.lrange("value", 0 , -1))
 
-    //? Sets-
 
+
+    //? Sets-
     await client.sadd("set", "1")
     await client.sadd("set", "3")
     await client.sadd("set", "8")
@@ -52,26 +53,35 @@ async function init(){
     console.log("Size of Set :- ", await client.scard("set"))
 
 
-    //? 
+
+    //? HashMap-
+    const allfield = await client.hset('bike:1', {modle: "honda", price: "100000", speed: "60km/h"})
+    console.log("------------HashMap------------")
+    console.log("get specific hashmap value -> ", await client.hget("bike:1", 'price'))
+    console.log("size of all -> ", allfield)
+    console.log("get all hashmap value -> ", await client.hgetall("bike:1"))
+    console.log("Multiple get -> ", await client.hmget("bike:1", ["model", "price"]))
 
 
     //? Sorted Set-
-
     await client.zadd('rank', "10", "tejass")
     await client.zadd('rank', "14", "anil")
     await client.zadd('rank', "1", "prince")
     await client.zadd('rank', "6", "piyush")
     await client.zrem('rank', "piyush")
 
-
     console.log("---------------Sorted Set Part------------")
     console.log("Sorted Set value is -> ", await client.zrange('rank', 0, -1))
     console.log("Sorted Set reverse value is -> ", await client.zrevrange('rank', 0, -1))
     console.log("Access value -> ", await client.zrank("rank", "anil"))
 
+
     //? stream-
     await client.xadd('temp', "*", "orderid", "123", "userid", "456", "status", "done")
+    // console.log("read stream -> ", await client.xread('temp', "*", "userid"))
 
+    //? pub/sub-
+    await client.subscribe("notification");
 
 }
 
